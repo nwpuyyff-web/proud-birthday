@@ -5,466 +5,115 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>🎂 สุขสันต์วันเกิด | Proud · 生日快乐</title>
     <style>
-        :root {
-            --gold: #f0c060;
-            --pink: #ff6b9d;
-            --purple: #c77dff;
-            --soft-white: #fff0f5;
-        }
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        html,
-        body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            font-family: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', 'Sarabun', 'Noto Sans Thai', sans-serif;
-            background: #0d0515;
-            user-select: none;
-            -webkit-user-select: none;
-            -webkit-tap-highlight-color: transparent;
-            touch-action: pan-y;
-        }
-        .main-container {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-            will-change: transform;
-        }
-        .page {
-            width: 100%;
-            height: 100vh;
-            height: 100dvh;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-        }
+        :root { --gold: #f0c060; --pink: #ff6b9d; --purple: #c77dff; --soft-white: #fff0f5; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', 'Sarabun', 'Noto Sans Thai', sans-serif; background: #2a1a30; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; touch-action: pan-y; }
+        .main-container { width: 100%; height: 100%; position: relative; transition: transform 0.8s cubic-bezier(0.4,0,0.2,1); will-change: transform; }
+        .page { width: 100%; height: 100vh; height: 100dvh; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; flex-direction: column; }
 
-        /* 音乐播放器 */
-        .music-player {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 1000;
-            background: rgba(20, 10, 30, 0.7);
-            backdrop-filter: blur(10px);
-            border-radius: 30px;
-            padding: 8px 16px;
-            border: 1px solid rgba(255, 160, 200, 0.4);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #ffd0e0;
-            font-size: 0.8rem;
-            max-width: 200px;
-        }
-        .music-player audio {
-            width: 140px;
-            height: 28px;
-        }
-        .music-player audio::-webkit-media-controls-panel {
-            background-color: rgba(255, 220, 240, 0.9);
-        }
+        /* 音乐播放器（隐藏，仅用于背景） */
+        .music-player { position: fixed; bottom: 20px; right: 20px; z-index: 1000; background: rgba(60,25,50,0.7); backdrop-filter: blur(10px); border-radius: 30px; padding: 8px 16px; border: 1px solid rgba(255,160,200,0.4); box-shadow: 0 4px 20px rgba(0,0,0,0.4); display: flex; align-items: center; gap: 8px; color: #ffd0e0; font-size: 0.8rem; max-width: 200px; }
+        .music-player audio { width: 140px; height: 28px; }
 
-        /* ---------- 第1页：倒计时 ---------- */
-        .page-countdown {
-            background: radial-gradient(ellipse at 30% 40%, #2a1035 0%, #14081e 40%, #0a0310 80%);
-            text-align: center;
-            color: #fff;
-        }
-        .countdown-title {
-            font-size: 2rem;
-            font-weight: 600;
-            color: #e0b0d0;
-            letter-spacing: 0.05em;
-            margin-bottom: 0.8rem;
-            text-shadow: 0 0 20px rgba(255, 130, 180, 0.5);
-        }
-        .countdown-thai {
-            font-size: 1.3rem;
-            color: #d0a0c0;
-            margin-bottom: 2rem;
-            font-family: 'Sarabun', 'Noto Sans Thai', sans-serif;
-        }
-        .countdown-timer {
-            display: flex;
-            gap: 1.2rem;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 1.5rem;
-        }
-        .time-block {
-            background: rgba(255, 220, 240, 0.1);
-            border: 1px solid rgba(255, 180, 200, 0.4);
-            border-radius: 16px;
-            padding: 1rem 1.2rem;
-            min-width: 70px;
-            backdrop-filter: blur(8px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        }
-        .time-number {
-            font-size: 2.5rem;
-            font-weight: 800;
-            background: linear-gradient(180deg, #ffe0f0, #f8a0c0);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            display: block;
-        }
-        .time-label {
-            font-size: 0.8rem;
-            color: #c0a0b0;
-            letter-spacing: 0.05em;
-            margin-top: 0.3rem;
-            display: block;
-        }
-        .countdown-hint {
-            color: rgba(255, 200, 220, 0.7);
-            font-size: 0.9rem;
-            letter-spacing: 0.03em;
-            animation: hintPulse 2s infinite;
-        }
-        .lock-message {
-            position: absolute;
-            bottom: 5rem;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #ffb3d9;
-            font-size: 1rem;
-            background: rgba(0, 0, 0, 0.5);
-            padding: 0.6rem 1.8rem;
-            border-radius: 30px;
-            backdrop-filter: blur(12px);
-            letter-spacing: 0.04em;
-            z-index: 10;
-            display: none;
-            border: 1px solid rgba(255, 150, 200, 0.4);
-        }
-        .lock-message.show {
-            display: block;
-            animation: fadeInOut 2s ease forwards;
-        }
-        @keyframes fadeInOut {
-            0% { opacity: 0; transform: translateX(-50%) translateY(10px); }
-            15% { opacity: 1; transform: translateX(-50%) translateY(0); }
-            85% { opacity: 1; transform: translateX(-50%) translateY(0); }
-            100% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
-        }
-        @keyframes hintPulse {
-            0%,100% { opacity: 0.5; }
-            50% { opacity: 1; }
-        }
-        .unlock-indicator {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: rgba(0, 0, 0, 0.5);
-            color: #a0ffa0;
-            padding: 0.4rem 1rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            letter-spacing: 0.04em;
-            backdrop-filter: blur(8px);
-            z-index: 15;
-            display: none;
-            border: 1px solid rgba(100, 255, 100, 0.5);
-        }
-        .unlock-indicator.show {
-            display: block;
-        }
+        /* 第1页：倒计时 */
+        .page-countdown { background: radial-gradient(ellipse at 30% 40%, #8a4a6a 0%, #5c2d4a 30%, #3a1a30 80%); text-align: center; color: #fff; }
+        .countdown-title { font-size: 2rem; font-weight: 600; color: #f0c0d8; letter-spacing: 0.05em; margin-bottom: 0.8rem; text-shadow: 0 0 20px rgba(255,130,180,0.5); }
+        .countdown-thai { font-size: 1.3rem; color: #e0a0c0; margin-bottom: 2rem; font-family: 'Sarabun','Noto Sans Thai',sans-serif; }
+        .countdown-timer { display: flex; gap: 1.2rem; justify-content: center; flex-wrap: wrap; margin-bottom: 1.5rem; }
+        .time-block { background: rgba(255,220,240,0.15); border: 1px solid rgba(255,180,200,0.5); border-radius: 16px; padding: 1rem 1.2rem; min-width: 70px; backdrop-filter: blur(8px); box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        .time-number { font-size: 2.5rem; font-weight: 800; background: linear-gradient(180deg,#ffe0f0,#f8a0c0); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; display: block; }
+        .time-label { font-size: 0.8rem; color: #d0b0c0; letter-spacing: 0.05em; margin-top: 0.3rem; display: block; }
+        .countdown-hint { color: rgba(255,200,220,0.8); font-size: 0.9rem; letter-spacing: 0.03em; animation: hintPulse 2s infinite; }
+        .lock-message { position: absolute; bottom: 5rem; left: 50%; transform: translateX(-50%); color: #ffb3d9; font-size: 1rem; background: rgba(0,0,0,0.5); padding: 0.6rem 1.8rem; border-radius: 30px; backdrop-filter: blur(12px); letter-spacing: 0.04em; z-index: 10; display: none; border: 1px solid rgba(255,150,200,0.4); }
+        .lock-message.show { display: block; animation: fadeInOut 2s ease forwards; }
+        @keyframes fadeInOut { 0%{opacity:0;transform:translateX(-50%) translateY(10px);} 15%{opacity:1;transform:translateX(-50%) translateY(0);} 85%{opacity:1;transform:translateX(-50%) translateY(0);} 100%{opacity:0;transform:translateX(-50%) translateY(-10px);} }
+        @keyframes hintPulse { 0%,100%{opacity:0.5;} 50%{opacity:1;} }
+        .unlock-indicator { position: absolute; top: 1rem; right: 1rem; background: rgba(0,0,0,0.5); color: #a0ffa0; padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.75rem; letter-spacing: 0.04em; backdrop-filter: blur(8px); z-index: 15; display: none; border: 1px solid rgba(100,255,100,0.5); }
+        .unlock-indicator.show { display: block; }
 
-        /* ---------- 第2页：封面（字体加大） ---------- */
-        .page-cover {
-            background: radial-gradient(ellipse at 30% 40%, #4a1942 0%, #2d1b3d 30%, #0d0515 70%);
-            text-align: center;
-        }
-        .stars-bg {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-        }
-        .cover-content {
-            position: relative;
-            z-index: 2;
-            animation: floatIn 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
-        }
-        @keyframes floatIn {
-            from { opacity: 0; transform: translateY(40px) scale(0.9); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        .cover-emoji {
-            font-size: 6rem;
-            animation: gentleBounce 2.2s ease-in-out infinite;
-            filter: drop-shadow(0 0 40px rgba(255, 105, 180, 0.8));
-        }
-        @keyframes gentleBounce {
-            0%,100% { transform: translateY(0); }
-            40% { transform: translateY(-18px); }
-            60% { transform: translateY(-6px); }
-            80% { transform: translateY(-2px); }
-        }
-        .cover-title {
-            font-size: clamp(3.5rem, 10vw, 6rem);  /* 放大 */
-            font-weight: 900;
-            letter-spacing: 0.06em;
-            background: linear-gradient(180deg, #ffe0f0 0%, #f8a0c0 30%, #d06090 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin: 0.5rem 0;
-            filter: drop-shadow(0 4px 30px rgba(255, 130, 180, 0.7));
-        }
-        .cover-subtitle {
-            font-size: 1.5rem;
-            color: #e8c0d0;
-            letter-spacing: 0.06em;
-            margin-top: 0.3rem;
-        }
-        .cover-thai {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: #ffb3d9;
-            margin-top: 0.6rem;
-            letter-spacing: 0.03em;
-            text-shadow: 0 0 25px rgba(255, 130, 180, 0.6);
-            font-family: 'Sarabun', 'Noto Sans Thai', 'Leelawadee', sans-serif;
-        }
-        .cover-name {
-            font-size: 1.5rem;
-            color: #ffd0e8;
-            margin-top: 0.5rem;
-            letter-spacing: 0.04em;
-            font-style: italic;
-        }
-        .cover-hint {
-            position: absolute;
-            bottom: 2.5rem;
-            left: 50%;
-            transform: translateX(-50%);
-            color: rgba(255, 220, 240, 0.6);
-            font-size: 0.95rem;
-            letter-spacing: 0.05em;
-            animation: hintPulse2 2.5s ease-in-out infinite;
-            z-index: 2;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-        }
-        .cover-hint .arrow {
-            font-size: 1.3rem;
-            animation: arrowBounce 1.5s ease-in-out infinite;
-        }
-        @keyframes hintPulse2 {
-            0%,100% { opacity: 0.4; }
-            50% { opacity: 0.9; }
-        }
-        @keyframes arrowBounce {
-            0%,100% { transform: translateY(0); }
-            50% { transform: translateY(8px); }
-        }
-        .petal {
-            position: absolute;
-            pointer-events: none;
-            z-index: 1;
-            animation: petalFall linear forwards;
-            opacity: 0;
-        }
-        @keyframes petalFall {
-            0% { opacity: 0; transform: translateY(-50px) rotate(0deg) scale(0.4); }
-            10% { opacity: 1; }
-            90% { opacity: 0.7; }
-            100% { opacity: 0; transform: translateY(105vh) rotate(720deg) scale(1.5); }
-        }
+        /* 第2页：封面 */
+        .page-cover { background: radial-gradient(ellipse at 30% 40%, #a35a7a 0%, #7a3d5a 30%, #4a1a35 70%); text-align: center; }
+        .stars-bg { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+        .cover-content { position: relative; z-index: 2; animation: floatIn 1.4s cubic-bezier(0.25,0.46,0.45,0.94) both; }
+        @keyframes floatIn { from{opacity:0;transform:translateY(40px) scale(0.9);} to{opacity:1;transform:translateY(0) scale(1);} }
+        .cover-emoji { font-size: 6rem; animation: gentleBounce 2.2s ease-in-out infinite; filter: drop-shadow(0 0 40px rgba(255,105,180,0.8)); }
+        @keyframes gentleBounce { 0%,100%{transform:translateY(0);} 40%{transform:translateY(-18px);} 60%{transform:translateY(-6px);} 80%{transform:translateY(-2px);} }
+        .cover-title { font-size: clamp(3.5rem,10vw,6rem); font-weight:900; letter-spacing:0.06em; background:linear-gradient(180deg,#ffe0f0,#f8a0c0 30%,#d06090); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin:0.5rem 0; filter:drop-shadow(0 4px 30px rgba(255,130,180,0.7)); }
+        .cover-subtitle { font-size:1.5rem; color:#f0c0d0; letter-spacing:0.06em; margin-top:0.3rem; }
+        .cover-thai { font-size:2.2rem; font-weight:700; color:#ffb3d9; margin-top:0.6rem; letter-spacing:0.03em; text-shadow:0 0 25px rgba(255,130,180,0.6); font-family:'Sarabun','Noto Sans Thai','Leelawadee',sans-serif; }
+        .cover-name { font-size:1.5rem; color:#ffd0e8; margin-top:0.5rem; letter-spacing:0.04em; font-style:italic; }
+        .cover-hint { position:absolute; bottom:2.5rem; left:50%; transform:translateX(-50%); color:rgba(255,220,240,0.7); font-size:0.95rem; letter-spacing:0.05em; animation:hintPulse2 2.5s ease-in-out infinite; z-index:2; display:flex; flex-direction:column; align-items:center; gap:6px; }
+        .cover-hint .arrow { font-size:1.3rem; animation:arrowBounce 1.5s ease-in-out infinite; }
+        @keyframes hintPulse2 { 0%,100%{opacity:0.4;} 50%{opacity:0.9;} }
+        @keyframes arrowBounce { 0%,100%{transform:translateY(0);} 50%{transform:translateY(8px);} }
 
-        /* ---------- 第3页：照片墙 ---------- */
-        .page-photos {
-            background: radial-gradient(ellipse at 70% 30%, #3d1e38 0%, #1f1325 40%, #0d0515 80%);
-            padding: 2rem 1rem;
-            gap: 2rem;
-        }
-        .photos-title {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: #ffd0e0;
-            letter-spacing: 0.04em;
-            text-align: center;
-        }
-        .photos-thai {
-            font-size: 1.5rem;
-            color: #e0b0c0;
-            margin-top: 0.3rem;
-            letter-spacing: 0.03em;
-            font-family: 'Sarabun', 'Noto Sans Thai', sans-serif;
-        }
-        .photos-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2rem;
-            justify-content: center;
-            align-items: center;
-            max-width: 950px;
-            margin-top: 1.5rem;
-        }
-        .photo-card {
-            width: 200px;
-            height: 260px;
-            perspective: 1000px;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-        .photo-card.wide {
-            width: 280px;
-        }
-        .card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
-            border-radius: 24px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 130, 180, 0.4);
-        }
-        .photo-card.flipped .card-inner {
-            transform: rotateY(180deg);
-        }
-        .card-front,
-        .card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            border: 2px solid rgba(200, 120, 160, 0.6);
-            overflow: hidden;
-        }
-        .card-front {
-            background: linear-gradient(145deg, #3a2045, #1f1030);
-            color: #ffb3c9;
-            font-size: 4.5rem;
-        }
-        .card-back {
-            background: linear-gradient(145deg, #4a2540, #2a1535);
-            transform: rotateY(180deg);
-            color: #ffe0f0;
-            font-size: 3.5rem;
-            text-align: center;
-            padding: 1.5rem;
-        }
-        .card-back span {
-            font-size: 1.2rem;
-            color: #d0a0c0;
-            margin-top: 0.6rem;
-            letter-spacing: 0.05em;
-        }
-        .photo-label {
-            position: absolute;
-            bottom: 14px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.8rem;
-            color: #ffd0e0;
-            background: rgba(0, 0, 0, 0.55);
-            padding: 5px 16px;
-            border-radius: 16px;
-            letter-spacing: 0.05em;
-            white-space: nowrap;
-            backdrop-filter: blur(4px);
-            z-index: 2;
-        }
-        .photos-note {
-            color: #b090a0;
-            font-size: 0.95rem;
-            text-align: center;
-            margin-top: 1.5rem;
-            letter-spacing: 0.04em;
-        }
+        /* 飘落照片 */
+        .photo-petal { position:absolute; pointer-events:none; z-index:1; animation:photoFall linear forwards; opacity:0; border-radius:8px; box-shadow:0 6px 16px rgba(0,0,0,0.5),0 0 0 3px white,0 0 0 7px rgba(255,180,200,0.6); background:#fff; padding:5px; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+        .photo-petal img { width:100%; height:100%; object-fit:cover; display:block; }
+        @keyframes photoFall { 0%{opacity:0;transform:translateY(-60px) rotate(-15deg) scale(0.4);} 10%{opacity:1;} 90%{opacity:0.8;} 100%{opacity:0;transform:translateY(105vh) rotate(25deg) scale(1.4);} }
 
-        /* ---------- 第4页：无人机灯展 ---------- */
-        .page-drones {
-            background: #02010a;
-            position: relative;
-        }
-        .page-drones canvas {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
-        .drone-hint {
-            position: absolute;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            color: rgba(255, 200, 220, 0.7);
-            font-size: 0.95rem;
-            letter-spacing: 0.04em;
-            z-index: 5;
-            pointer-events: none;
-            text-align: center;
-            transition: opacity 0.5s;
-        }
+        /* 第3页：照片墙 */
+        .page-photos { background:radial-gradient(ellipse at 70% 30%, #8a4a60 0%, #5a2a40 40%, #3a1525 80%); padding:2rem 1rem; gap:2rem; }
+        .photos-title { font-size:2.2rem; font-weight:700; color:#ffd0e0; letter-spacing:0.04em; text-align:center; }
+        .photos-thai { font-size:1.5rem; color:#e0b0c0; margin-top:0.3rem; letter-spacing:0.03em; font-family:'Sarabun','Noto Sans Thai',sans-serif; }
+        .photos-grid { display:flex; flex-wrap:wrap; gap:2rem; justify-content:center; align-items:center; max-width:1000px; margin-top:1.5rem; }
+        .photo-card { width:240px; height:300px; perspective:1000px; cursor:pointer; flex-shrink:0; }
+        .photo-card.wide { width:320px; }
+        .card-inner { position:relative; width:100%; height:100%; transition:transform 0.6s; transform-style:preserve-3d; border-radius:24px; box-shadow:0 15px 40px rgba(0,0,0,0.6),0 0 30px rgba(255,130,180,0.4); }
+        .photo-card.flipped .card-inner { transform:rotateY(180deg); }
+        .card-front,.card-back { position:absolute; width:100%; height:100%; -webkit-backface-visibility:hidden; backface-visibility:hidden; border-radius:24px; display:flex; align-items:center; justify-content:center; flex-direction:column; border:2px solid rgba(200,120,160,0.6); overflow:hidden; background:linear-gradient(145deg,#6a3a50,#3a1a2a); }
+        .card-front { z-index:2; }
+        .card-back { z-index:1; transform:rotateY(180deg); }
+        .card-front img,.card-back img { position:absolute; width:100%; height:100%; object-fit:cover; z-index:1; }
+        .card-back .fallback-emoji { display:none; font-size:3rem; z-index:2; }
+        .card-back img.error+.fallback-emoji { display:block; }
+        .photo-label { position:absolute; bottom:14px; left:50%; transform:translateX(-50%); font-size:0.85rem; color:#ffd0e0; background:rgba(0,0,0,0.55); padding:5px 16px; border-radius:16px; letter-spacing:0.05em; white-space:nowrap; backdrop-filter:blur(4px); z-index:3; }
+        .photos-note { color:#c0a0b0; font-size:0.95rem; text-align:center; margin-top:1.5rem; letter-spacing:0.04em; }
+
+        /* 第4页：无人机 */
+        .page-drones { background:#1a0a1a; position:relative; }
+        .page-drones canvas { position:absolute; inset:0; width:100%; height:100%; display:block; }
+        .drone-hint { position:absolute; bottom:2rem; left:50%; transform:translateX(-50%); color:rgba(255,200,220,0.7); font-size:0.95rem; letter-spacing:0.04em; z-index:5; pointer-events:none; text-align:center; transition:opacity 0.5s; }
+
+        /* 第5页：祝福语 + 惊喜卡片 */
+        .page-blessing { background:radial-gradient(ellipse at 30% 60%, #8a4a5a 0%, #5a2a3a 45%, #3a1525 80%); text-align:center; padding:2rem; position:relative; overflow:hidden; gap:1.5rem; }
+        .blessing-card { background:rgba(60,30,45,0.8); border:2px solid rgba(200,130,170,0.4); border-radius:30px; padding:2rem 2rem; max-width:650px; box-shadow:0 20px 50px rgba(0,0,0,0.5),0 0 40px rgba(255,120,160,0.2); position:relative; backdrop-filter:blur(10px); z-index:2; }
+        .blessing-card::before { content:''; position:absolute; inset:-3px; border-radius:32px; padding:3px; background:linear-gradient(135deg,rgba(255,130,180,0.4),rgba(180,100,220,0.4),rgba(255,130,180,0.4)); -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0); mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0); -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none; }
+        .blessing-text { font-size:1.2rem; color:#f0d0e0; line-height:2.2; letter-spacing:0.04em; }
+        .blessing-text .highlight { color:#ff9bc0; font-weight:700; font-size:1.4rem; }
+        .blessing-thai { margin-top:1.5rem; font-size:1.2rem; color:#e0b0d0; letter-spacing:0.03em; font-family:'Sarabun','Noto Sans Thai',sans-serif; line-height:1.9; }
+        .blessing-sign { margin-top:1.5rem; color:#c0a0b0; font-style:italic; letter-spacing:0.05em; font-size:1rem; }
+        .blessing-name { font-size:1.6rem; color:#ffb3d9; font-weight:700; margin-top:0.5rem; }
+
+        /* 惊喜按钮与卡片 */
+        .surprise-btn { background:linear-gradient(135deg,#ff6b9d,#c77dff); border:none; color:#fff; padding:0.8rem 2rem; border-radius:30px; font-size:1.1rem; font-weight:600; letter-spacing:0.05em; cursor:pointer; box-shadow:0 4px 20px rgba(255,120,160,0.5); transition:all 0.3s; z-index:3; }
+        .surprise-btn:hover { transform:scale(1.05); box-shadow:0 6px 25px rgba(255,120,160,0.7); }
+        .surprise-card-container { perspective:1000px; width:280px; height:350px; margin-top:0.5rem; }
+        .surprise-card-inner { position:relative; width:100%; height:100%; transition:transform 0.8s; transform-style:preserve-3d; border-radius:24px; box-shadow:0 15px 40px rgba(0,0,0,0.6); }
+        .surprise-card-container.flipped .surprise-card-inner { transform:rotateY(180deg); }
+        .surprise-front,.surprise-back { position:absolute; width:100%; height:100%; -webkit-backface-visibility:hidden; backface-visibility:hidden; border-radius:24px; display:flex; align-items:center; justify-content:center; flex-direction:column; border:2px solid rgba(200,120,160,0.6); overflow:hidden; background:linear-gradient(145deg,#6a3a50,#3a1a2a); color:#ffd0e0; font-size:1.5rem; padding:1rem; text-align:center; }
+        .surprise-front { z-index:2; }
+        .surprise-back { z-index:1; transform:rotateY(180deg); }
+        .surprise-back img { position:absolute; width:100%; height:100%; object-fit:cover; z-index:1; }
+        .surprise-back .photo-text { position:relative; z-index:2; background:rgba(0,0,0,0.6); padding:0.5rem 1.5rem; border-radius:20px; font-size:1.2rem; color:#fff; }
+
+        /* 烟花 */
+        .firework { position:absolute; pointer-events:none; z-index:1; }
+        .firework-rocket { position:absolute; width:6px; height:6px; background:#fff; border-radius:50%; box-shadow:0 0 6px #ffb3d9; animation:rocketUp 0.8s ease-out forwards; }
+        @keyframes rocketUp { 0%{ top:100%; opacity:1; } 100%{ top:var(--burstY); opacity:0; } }
+        .firework-burst { position:absolute; left:0; top:0; }
+        .firework-particle { position:absolute; width:16px; height:16px; border-radius:50%; background:#fff; animation:burst 1.0s ease-out forwards; opacity:0; }
+        @keyframes burst { 0%{ transform:translate(0,0) scale(1); opacity:1; } 100%{ transform:translate(var(--tx),var(--ty)) scale(0); opacity:0; } }
 
         /* 页面指示器 */
-        .page-indicators {
-            position: fixed;
-            right: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 100;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .page-indicators .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: rgba(255, 200, 220, 0.35);
-            cursor: pointer;
-            transition: all 0.4s;
-            border: 1px solid rgba(255, 180, 200, 0.3);
-        }
-        .page-indicators .dot.active {
-            background: #ff8ab0;
-            box-shadow: 0 0 18px rgba(255, 120, 160, 0.9);
-            border-color: #ffb0c8;
-            transform: scale(1.4);
-        }
+        .page-indicators { position:fixed; right:16px; top:50%; transform:translateY(-50%); z-index:100; display:flex; flex-direction:column; gap:10px; }
+        .page-indicators .dot { width:10px; height:10px; border-radius:50%; background:rgba(255,200,220,0.35); cursor:pointer; transition:all 0.4s; border:1px solid rgba(255,180,200,0.3); }
+        .page-indicators .dot.active { background:#ff8ab0; box-shadow:0 0 18px rgba(255,120,160,0.9); border-color:#ffb0c8; transform:scale(1.4); }
 
-        @media (max-width: 600px) {
-            .cover-title { font-size: 2.8rem; }
-            .cover-thai { font-size: 1.6rem; }
-            .photo-card { width: 150px; height: 200px; }
-            .photo-card.wide { width: 210px; }
-            .card-front { font-size: 3rem; }
-            .photo-label { font-size: 0.7rem; bottom: 10px; }
-            .countdown-timer { gap: 0.6rem; }
-            .time-block { padding: 0.7rem 0.8rem; min-width: 55px; }
-            .time-number { font-size: 1.8rem; }
-            .cover-emoji { font-size: 4rem; }
-            .page-indicators { right: 8px; gap: 8px; }
-            .page-indicators .dot { width: 8px; height: 8px; }
-            .music-player { bottom: 10px; right: 10px; padding: 5px 10px; }
-            .music-player audio { width: 110px; }
-        }
+        @media (max-width:600px) { .cover-title { font-size:2.8rem; } .photo-card { width:170px; height:220px; } .photo-card.wide { width:230px; } .surprise-card-container { width:220px; height:280px; } }
     </style>
 </head>
 <body>
-
     <div class="main-container" id="mainContainer">
         <!-- 第1页：倒计时 -->
         <div class="page page-countdown" data-page="0" id="lockPage">
@@ -479,10 +128,10 @@
             </div>
             <p class="countdown-hint">🕒 泰国时间 (UTC+7)</p>
             <div class="lock-message" id="lockMessage">🔒 时间未到，还不能打开哦</div>
-            <div class="cover-hint" id="coverHintLock" style="position:absolute; bottom:2rem;"><span>等待解锁</span><span class="arrow">🔒</span></div>
+            <div class="cover-hint" id="coverHintLock" style="position:absolute;bottom:2rem;"><span>等待解锁</span><span class="arrow">🔒</span></div>
         </div>
 
-        <!-- 第2页：生日快乐（加大） -->
+        <!-- 第2页：生日快乐 -->
         <div class="page page-cover" data-page="1">
             <div class="stars-bg" id="coverStars"></div>
             <div class="cover-content">
@@ -500,20 +149,40 @@
             <h2 class="photos-title">📸 ความทรงจำดีๆ · 美好回忆</h2>
             <p class="photos-thai">ทุกช่วงเวลามีความหมายเสมอ</p>
             <div class="photos-grid" id="photosGrid">
-                <div class="photo-card" onclick="this.classList.toggle('flipped')"><div class="card-inner"><div class="card-front">🎈<span class="photo-label">ความสุข</span></div><div class="card-back">🌸<span>Proud</span></div></div></div>
-                <div class="photo-card wide" onclick="this.classList.toggle('flipped')"><div class="card-inner"><div class="card-front">🌟<span class="photo-label">รอยยิ้มสดใส</span></div><div class="card-back">💖<span>Proud</span></div></div></div>
-                <div class="photo-card" onclick="this.classList.toggle('flipped')"><div class="card-inner"><div class="card-front">🎁<span class="photo-label">เซอร์ไพรส์</span></div><div class="card-back">🎀<span>Proud</span></div></div></div>
-                <div class="photo-card" onclick="this.classList.toggle('flipped')"><div class="card-inner"><div class="card-front">💖<span class="photo-label">ช่วงเวลาดีๆ</span></div><div class="card-back">✨<span>Proud</span></div></div></div>
-                <div class="photo-card wide" onclick="this.classList.toggle('flipped')"><div class="card-inner"><div class="card-front">🎊<span class="photo-label">รวมตัวกัน</span></div><div class="card-back">🦋<span>Proud</span></div></div></div>
-                <div class="photo-card" onclick="this.classList.toggle('flipped')"><div class="card-inner"><div class="card-front">🌸<span class="photo-label">ชีวิตประจำวัน</span></div><div class="card-back">💗<span>Proud</span></div></div></div>
+                <div class="photo-card" onclick="this.classList.toggle('flipped')"><div class="card-inner"><div class="card-front"><img src="1.jpg" alt="photo"><span class="photo-label">去年生日</span></div><div class="card-back"><img src="24.jpg" alt="photo" onerror="this.style.display='none';this.nextElementSibling.style.display='block';"><span class="fallback-emoji">💖</span></div></div></div>
+                <div class="photo-card wide" onclick="this.classList.toggle('flipped')"><div class="card-inner"><div class="card-front"><img src="2.jpg" alt="photo"><span class="photo-label">毕业快乐</span></div><div class="card-back"><img src="4.jpg" alt="photo" onerror="this.style.display='none';this.nextElementSibling.style.display='block';"><span class="fallback-emoji">💖</span></div></div></div>
+                <div class="photo-card" onclick="this.classList.toggle('flipped')"><div class="card-inner"><div class="card-front"><img src="5.jpg" alt="photo"><span class="photo-label">和朋友玩</span></div><div class="card-back"><img src="30.jpg" alt="photo" onerror="this.style.display='none';this.nextElementSibling.style.display='block';"><span class="fallback-emoji">💖</span></div></div></div>
+                <div class="photo-card" onclick="this.classList.toggle('flipped')"><div class="card-inner"><div class="card-front"><img src="6.jpg" alt="photo"><span class="photo-label">和家人玩</span></div><div class="card-back"><img src="8.jpg" alt="photo" onerror="this.style.display='none';this.nextElementSibling.style.display='block';"><span class="fallback-emoji">💖</span></div></div></div>
+                <div class="photo-card wide" onclick="this.classList.toggle('flipped')"><div class="card-inner"><div class="card-front"><img src="11.jpg" alt="photo"><span class="photo-label">终于见面了</span></div><div class="card-back"><img src="14.jpg" alt="photo" onerror="this.style.display='none';this.nextElementSibling.style.display='block';"><span class="fallback-emoji">💖</span></div></div></div>
+                <div class="photo-card" onclick="this.classList.toggle('flipped')"><div class="card-inner"><div class="card-front"><img src="18.jpg" alt="photo"><span class="photo-label">开心的旅行</span></div><div class="card-back"><img src="20.jpg" alt="photo" onerror="this.style.display='none';this.nextElementSibling.style.display='block';"><span class="fallback-emoji">💖</span></div></div></div>
             </div>
-            <p class="photos-note">💡 点击卡片翻转 · 图案可后续替换为真实照片</p>
+            <p class="photos-note">💡 คลิกการ์ดเพื่อพลิก · 点击卡片翻转</p>
         </div>
 
         <!-- 第4页：无人机灯光秀 -->
         <div class="page page-drones" data-page="3" id="dronePage">
             <canvas id="droneCanvas"></canvas>
             <div class="drone-hint" id="droneHint">👆 แตะเพื่อเปลี่ยนคำอวยพร · 点击切换祝福</div>
+        </div>
+
+        <!-- 第5页：祝福语 + 惊喜 -->
+        <div class="page page-blessing" data-page="4" id="blessingPage">
+            <div class="blessing-card">
+                <p class="blessing-text">亲爱的 Proud，<br>生日快乐！<br>愿所有的美好都如期而至，<br>愿你的笑容永远如阳光般灿烂，<br>愿每一个梦想都绽放光芒，<br>愿你被世界温柔以待。<br>爱你，永远。<br>🎂🎉💖</p>
+                <p class="blessing-thai">ถึง Proud<br>สุขสันต์วันเกิดนะ<br>ขอให้สิ่งดีๆเกิดขึ้นกับเธอเสมอ<br>ขอให้รอยยิ้มของเธอสดใสเหมือนแสงแดด<br>ขอให้ทุกความฝันเป็นจริง<br>รักเธอมากนะ<br>🌸✨🎀</p>
+                <p class="blessing-sign">—— from coconut</p>
+                <p class="blessing-name">for proud 🌷</p>
+            </div>
+            <button class="surprise-btn" id="surpriseBtn">🎁 点击获得surprise</button>
+            <div class="surprise-card-container" id="surpriseCardContainer">
+                <div class="surprise-card-inner">
+                    <div class="surprise-front">❓</div>
+                    <div class="surprise-back">
+                        <img src="surprise.jpg" alt="surprise" onerror="this.style.display='none';">
+                        <span class="photo-text">请找弟弟领取礼物</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -522,24 +191,22 @@
         <span class="dot" data-index="1"></span>
         <span class="dot" data-index="2"></span>
         <span class="dot" data-index="3"></span>
+        <span class="dot" data-index="4"></span>
     </div>
 
-    <!-- 音乐播放器 -->
-    <div class="music-player" id="musicPlayer">
-        <span style="font-size:1rem;">🎵</span>
-        <audio id="bgMusic" loop controls>
-            <source src="fromnowon.mp3" type="audio/mpeg">
-            您的浏览器不支持音频播放。
-        </audio>
-    </div>
+    <!-- 音乐播放器（隐藏控件，通过点击屏幕播放） -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="FromnowonBillkin.mp3" type="audio/mpeg">
+        您的浏览器不支持音频播放。
+    </audio>
 
     <script>
+        const FLYING_PHOTOS = ['3.jpg','7.jpg','9.jpg','10.jpg','12.jpg','13.jpg','15.jpg','16.jpg','17.jpg','19.jpg','21.jpg','22.jpg','23.jpg','25.jpg','26.jpg','27.jpg','28.jpg','29.jpg','31.jpg','32.jpg','33.jpg','34.jpg','35.jpg'];
+        const PORTRAIT_PHOTO = ''; // 留空则不显示人像
+
         (function() {
-            const totalPages = 4;
-            let currentPage = 0;
-            let isTransitioning = false;
-            let touchStartY = 0;
-            let touchDeltaY = 0;
+            const totalPages = 5;
+            let currentPage = 0, isTransitioning = false, touchStartY = 0, touchDeltaY = 0;
             const SWIPE_THRESHOLD = 50;
             const mainContainer = document.getElementById('mainContainer');
             const dots = document.querySelectorAll('#pageIndicators .dot');
@@ -548,32 +215,34 @@
             const unlockIndicator = document.getElementById('unlockIndicator');
             const bgMusic = document.getElementById('bgMusic');
 
+            // 音乐：点击任意位置播放
+            document.addEventListener('click', () => {
+                if (bgMusic.paused) bgMusic.play().catch(() => {});
+            }, { once: true });
+
+            // 3击解锁
             let clickCount = 0, clickTimer = null, devUnlocked = false;
-            const lockPage = document.getElementById('lockPage');
-            lockPage.addEventListener('click', () => {
+            document.getElementById('lockPage').addEventListener('click', () => {
                 if (devUnlocked) return;
                 clickCount++;
                 if (clickTimer) clearTimeout(clickTimer);
                 clickTimer = setTimeout(() => clickCount = 0, 800);
                 if (clickCount >= 3) {
                     devUnlocked = true;
-                    clickCount = 0;
                     unlockIndicator.classList.add('show');
                     coverHintLock.innerHTML = '<span>向下滑动</span><span class="arrow">↓</span>';
                     setTimeout(() => unlockIndicator.classList.remove('show'), 3000);
                 }
             });
 
-            function updateIndicators(i) { dots.forEach((d, idx) => d.classList.toggle('active', idx === i)); }
-
+            function updateIndicators(i) { dots.forEach((d,idx) => d.classList.toggle('active', idx===i)); }
             function getThaiTime() { const now = new Date(); return new Date(now.getTime() + now.getTimezoneOffset()*60000 + 7*3600000); }
             function isBirthdayReached() {
                 const thaiNow = getThaiTime();
-                let birthday = new Date(thaiNow.getFullYear(), 4, 28, 0,0,0);
+                let birthday = new Date(thaiNow.getFullYear(), 4, 28);
                 if (thaiNow > birthday) birthday = new Date(thaiNow.getFullYear()+1, 4, 28);
                 return birthday.getTime() - thaiNow.getTime() <= 0;
             }
-
             function updateLockUI() {
                 const reached = isBirthdayReached() || devUnlocked;
                 if (reached) {
@@ -584,11 +253,10 @@
                     coverHintLock.innerHTML = '<span>等待解锁</span><span class="arrow">🔒</span>';
                 }
             }
-
             function goToPage(index) {
-                if (index < 0 || index >= totalPages || isTransitioning) return;
-                if (index === currentPage) return;
-                if (currentPage === 0 && index > 0 && !isBirthdayReached() && !devUnlocked) {
+                if (index<0 || index>=totalPages || isTransitioning) return;
+                if (index===currentPage) return;
+                if (currentPage===0 && index>0 && !isBirthdayReached() && !devUnlocked) {
                     lockMessage.classList.add('show');
                     setTimeout(() => lockMessage.classList.remove('show'), 2000);
                     return;
@@ -597,29 +265,20 @@
                 currentPage = index;
                 mainContainer.style.transform = `translateY(-${index * 100}vh)`;
                 updateIndicators(index);
-                handleDronePageVisibility(index);
+                handleVisibility(index);
                 updateLockUI();
-                if (bgMusic.paused) bgMusic.play().catch(()=>{});
                 setTimeout(() => isTransitioning = false, 800);
             }
-
-            window.addEventListener('wheel', e => { if (!isTransitioning) goToPage(currentPage + (e.deltaY > 25 ? 1 : -1)); }, {passive:true});
-            window.addEventListener('touchstart', e => { touchStartY = e.touches[0].clientY; touchDeltaY = 0; }, {passive:true});
+            window.addEventListener('wheel', e => { if (!isTransitioning) goToPage(currentPage + (e.deltaY>25?1:-1)); }, {passive:true});
+            window.addEventListener('touchstart', e => { touchStartY = e.touches[0].clientY; }, {passive:true});
             window.addEventListener('touchmove', e => { touchDeltaY = e.touches[0].clientY - touchStartY; }, {passive:true});
-            window.addEventListener('touchend', () => {
-                if (isTransitioning) return;
-                if (touchDeltaY < -SWIPE_THRESHOLD) goToPage(currentPage+1);
-                else if (touchDeltaY > SWIPE_THRESHOLD) goToPage(currentPage-1);
-            });
-            window.addEventListener('keydown', e => {
-                if (e.key === 'ArrowDown' || e.key === 'PageDown') { e.preventDefault(); goToPage(currentPage+1); }
-                else if (e.key === 'ArrowUp' || e.key === 'PageUp') { e.preventDefault(); goToPage(currentPage-1); }
-            });
+            window.addEventListener('touchend', () => { if (!isTransitioning) goToPage(currentPage + (touchDeltaY<-SWIPE_THRESHOLD?1:touchDeltaY>SWIPE_THRESHOLD?-1:0)); });
+            window.addEventListener('keydown', e => { if (e.key==='ArrowDown'||e.key==='PageDown') { e.preventDefault(); goToPage(currentPage+1); } else if (e.key==='ArrowUp'||e.key==='PageUp') { e.preventDefault(); goToPage(currentPage-1); } });
             dots.forEach(dot => dot.addEventListener('click', () => goToPage(parseInt(dot.dataset.index))));
 
             function updateCountdown() {
                 const thaiNow = getThaiTime();
-                let birthday = new Date(thaiNow.getFullYear(), 4, 28, 0,0,0);
+                let birthday = new Date(thaiNow.getFullYear(), 4, 28);
                 if (thaiNow > birthday) birthday = new Date(thaiNow.getFullYear()+1, 4, 28);
                 const diff = birthday - thaiNow;
                 document.getElementById('days').textContent = String(Math.max(Math.floor(diff/86400000),0)).padStart(2,'0');
@@ -631,33 +290,38 @@
             setInterval(updateCountdown, 1000);
             updateCountdown();
 
-            // 花瓣
+            // 飘落照片
             const petalsContainer = document.getElementById('coverStars');
-            const petalEmojis = ['🌸','💮','🌷','🩷','✨','💖','🎀','💗','🦋','🌺','💐','🧡','💛','💜','❤️‍🔥','💘'];
-            function createPetal() {
+            function createPhotoPetal() {
                 if (!petalsContainer) return;
-                const el = document.createElement('span');
-                el.className = 'petal';
-                el.textContent = petalEmojis[Math.floor(Math.random()*petalEmojis.length)];
-                el.style.left = Math.random()*95+'%';
-                el.style.top = -(Math.random()*50+10)+'px';
-                el.style.fontSize = (0.8+Math.random()*2.5)+'rem';
-                el.style.animationDuration = (Math.random()*10+7)+'s';
+                const el = document.createElement('div'); el.className = 'photo-petal';
+                const size = 110 + Math.random()*110;
+                el.style.width = size+'px'; el.style.height = size+'px';
+                el.style.left = Math.random()*90+'%';
+                el.style.top = -(Math.random()*70+30)+'px';
+                el.style.animationDuration = (Math.random()*14+10)+'s';
+                if (FLYING_PHOTOS.length) {
+                    const img = document.createElement('img');
+                    img.src = FLYING_PHOTOS[Math.floor(Math.random()*FLYING_PHOTOS.length)];
+                    el.appendChild(img);
+                } else { el.textContent = '📸'; el.style.fontSize = '3rem'; }
                 petalsContainer.appendChild(el);
                 el.addEventListener('animationend', () => el.remove());
             }
-            for (let i=0; i<35; i++) setTimeout(createPetal, i*100);
-            setInterval(() => { if (currentPage === 1) createPetal(); }, 1000);
+            for (let i=0; i<20; i++) setTimeout(createPhotoPetal, i*200);
+            setInterval(() => { if (currentPage===1) createPhotoPetal(); }, 1500);
 
-            // ---------- 无人机灯光秀（三行显示，字体更大，光点适中） ----------
+            // 无人机灯光秀
             const droneCanvas = document.getElementById('droneCanvas');
             const ctx = droneCanvas.getContext('2d');
             let drones = [], animationId = null, isDroneAnimating = false;
             let messageIndex = 0, lastSwitchTime = 0;
-            const SWITCH_INTERVAL = 3000;
+            const SWITCH_INTERVAL = 4500;
             let canvasW, canvasH;
             const offCanvas = document.createElement('canvas');
             const offCtx = offCanvas.getContext('2d', { willReadFrequently: true });
+            let portraitImage = null;
+            if (PORTRAIT_PHOTO) { portraitImage = new Image(); portraitImage.src = PORTRAIT_PHOTO; }
 
             const blessingMessages = [
                 { zh: "你是我心中最亮的光 ✨", en: "You are the brightest light in my heart", th: "เธอคือแสงสว่างที่เจิดจ้าที่สุดในหัวใจฉัน" },
@@ -672,197 +336,56 @@
                 { zh: "永远爱你，Proud 💗", en: "Forever love you, Proud", th: "รักเธอตลอดไปนะ Proud" }
             ];
 
-            function hexToRgb(hex) {
-                hex = hex.replace(/^#/, '');
-                if (hex.length === 3) hex = hex.split('').map(c => c+c).join('');
-                const bigint = parseInt(hex, 16);
-                return `rgb(${(bigint>>16)&255},${(bigint>>8)&255},${bigint&255})`;
-            }
+            function hexToRgb(hex) { hex = hex.replace(/^#/,''); if(hex.length===3) hex = hex.split('').map(c=>c+c).join(''); const bigint = parseInt(hex,16); return `rgb(${(bigint>>16)&255},${(bigint>>8)&255},${bigint&255})`; }
+            function sampleOffCanvas(w,h,gap) { const imgData=offCtx.getImageData(0,0,w,h); const d=imgData.data,pts=[]; for(let y=0;y<h;y+=gap) for(let x=0;x<w;x+=gap) if(d[(y*w+x)*4+3]>100) pts.push({x,y}); return pts; }
+            function renderMultilineText(lines,w,h,fs) { offCanvas.width=w; offCanvas.height=h; offCtx.clearRect(0,0,w,h); offCtx.fillStyle='#fff'; offCtx.font=`bold ${fs}px "PingFang SC","Microsoft YaHei","SimHei","Sarabun","Noto Sans Thai",sans-serif`; offCtx.textAlign='center'; offCtx.textBaseline='middle'; const lh=fs*1.4,th=lines.length*lh; let sy=(h-th)/2+lh/2; lines.forEach((l,i)=>offCtx.fillText(l,w/2,sy+i*lh)); }
+            function getDroneColor() { const c=['#ff99bb','#ffaacc','#ff88aa','#ffbbdd','#ff77aa','#ff99cc','#ffb3d9','#ffc0cb','#e8a0ff','#d0a0ff','#ffa0d0','#ffd0e0','#ffffff','#ffe0f0','#ffc0e0']; return c[Math.floor(Math.random()*c.length)]; }
+            function initDrones(pts) { drones = pts.map(p=>({ x:Math.random()*canvasW, y:Math.random()*canvasH, tx:p.x, ty:p.y, color:getDroneColor(), size:3+Math.random()*2, phase:Math.random()*Math.PI*2, flickerSpeed:0.03+Math.random()*0.04, arrived:false, arrivalProgress:0 })); }
+            function updateDroneTargets(pts) { if(pts.length!==drones.length) { initDrones(pts); return; } drones.forEach((d,i)=>{ d.tx=pts[i].x; d.ty=pts[i].y; d.arrived=false; d.arrivalProgress=0; d.color=getDroneColor(); }); }
+            function drawDrone(d) { const {x,y,color,size}=d; let rgb=color.startsWith('#')?hexToRgb(color):(color.startsWith('rgb')?color:'rgb(255,150,180)'); ctx.fillStyle=rgb; ctx.beginPath(); ctx.arc(x,y,size,0,Math.PI*2); ctx.fill(); ctx.fillStyle='rgba(255,255,255,0.9)'; ctx.beginPath(); ctx.arc(x,y,size*0.4,0,Math.PI*2); ctx.fill(); }
+            function getPortraitPoints() { if(!portraitImage||!portraitImage.complete||portraitImage.naturalWidth===0) return []; offCanvas.width=canvasW; offCanvas.height=canvasH; offCtx.clearRect(0,0,canvasW,canvasH); const sc=Math.min(canvasW/portraitImage.width,canvasH/portraitImage.height); const iw=portraitImage.width*sc,ih=portraitImage.height*sc; offCtx.drawImage(portraitImage,(canvasW-iw)/2,(canvasH-ih)/2,iw,ih); const imgData=offCtx.getImageData(0,0,canvasW,canvasH); const d=imgData.data,pts=[]; for(let y=0;y<canvasH;y+=5) for(let x=0;x<canvasW;x+=5) { const idx=(y*canvasW+x)*4; const b=(d[idx]+d[idx+1]+d[idx+2])/3; if(b<128) pts.push({x,y}); } return pts; }
+            function switchToNextMessage() { if(PORTRAIT_PHOTO && messageIndex===blessingMessages.length) { const pts=getPortraitPoints(); if(pts.length>0) { updateDroneTargets(pts); messageIndex++; return; } } if(PORTRAIT_PHOTO && messageIndex>blessingMessages.length) messageIndex=0; const msg=blessingMessages[messageIndex%blessingMessages.length]; messageIndex++; const fs=Math.min(canvasW/6,canvasH/4,100); const lines=[msg.zh,msg.en,msg.th]; renderMultilineText(lines,canvasW,canvasH,fs); let pts=sampleOffCanvas(canvasW,canvasH,6); if(pts.length===0) { renderMultilineText([msg.zh],canvasW,canvasH,70); pts=sampleOffCanvas(canvasW,canvasH,5); } updateDroneTargets(pts); }
+            function animateDrones(ts) { if(!isDroneAnimating) return; animationId=requestAnimationFrame(animateDrones); if(ts-lastSwitchTime>SWITCH_INTERVAL && drones.length>0) { lastSwitchTime=ts; switchToNextMessage(); } ctx.clearRect(0,0,canvasW,canvasH); const bg=ctx.createRadialGradient(canvasW/2,canvasH*0.4,0,canvasW/2,canvasH,canvasH); bg.addColorStop(0,'#2a1a2a'); bg.addColorStop(0.6,'#1a0a1a'); bg.addColorStop(1,'#0a0510'); ctx.fillStyle=bg; ctx.fillRect(0,0,canvasW,canvasH); for(let d of drones) { if(!d.arrived) { d.arrivalProgress+=0.016; if(d.arrivalProgress>=1) { d.arrivalProgress=1; d.arrived=true; d.x=d.tx; d.y=d.ty; } else { const t=d.arrivalProgress,e=t<0.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2; d.x=d.tx+(d.x-d.tx)*(1-e); d.y=d.ty+(d.y-d.ty)*(1-e); } } drawDrone(d); } }
+            function resizeCanvas() { const rect=droneCanvas.parentElement.getBoundingClientRect(); const dpr=Math.min(window.devicePixelRatio||1,2); canvasW=rect.width||window.innerWidth; canvasH=rect.height||window.innerHeight; droneCanvas.width=canvasW*dpr; droneCanvas.height=canvasH*dpr; droneCanvas.style.width=canvasW+'px'; droneCanvas.style.height=canvasH+'px'; ctx.setTransform(1,0,0,1,0,0); ctx.scale(dpr,dpr); }
+            function startDroneAnimation() { if(isDroneAnimating) return; isDroneAnimating=true; messageIndex=0; lastSwitchTime=performance.now(); resizeCanvas(); const first=blessingMessages[0]; const fs=Math.min(canvasW/6,canvasH/4,100); renderMultilineText([first.zh,first.en,first.th],canvasW,canvasH,fs); let pts=sampleOffCanvas(canvasW,canvasH,6); if(pts.length===0) { renderMultilineText([first.zh],canvasW,canvasH,70); pts=sampleOffCanvas(canvasW,canvasH,5); } initDrones(pts); messageIndex=1; if(animationId) cancelAnimationFrame(animationId); animationId=requestAnimationFrame(animateDrones); }
+            function stopDroneAnimation() { isDroneAnimating=false; if(animationId) { cancelAnimationFrame(animationId); animationId=null; } drones=[]; if(ctx) ctx.clearRect(0,0,canvasW,canvasH); }
 
-            function sampleOffCanvas(w, h, gap) {
-                const imageData = offCtx.getImageData(0, 0, w, h);
-                const pixels = imageData.data, points = [];
-                for (let y = 0; y < h; y += gap) {
-                    for (let x = 0; x < w; x += gap) {
-                        if (pixels[(y*w + x)*4 + 3] > 100) points.push({x, y});
+            // 烟花
+            const blessingPage = document.getElementById('blessingPage');
+            function launchFirework() {
+                if(!blessingPage) return;
+                const rocket=document.createElement('div'); rocket.className='firework';
+                const burstY=Math.random()*30+10; rocket.style.left=Math.random()*80+10+'%'; rocket.style.setProperty('--burstY',burstY+'%');
+                const rocketEl=document.createElement('div'); rocketEl.className='firework-rocket'; rocket.appendChild(rocketEl);
+                blessingPage.appendChild(rocket);
+                rocketEl.addEventListener('animationend',()=>{
+                    rocket.remove();
+                    const burst=document.createElement('div'); burst.className='firework-burst'; burst.style.position='absolute'; burst.style.left=rocket.style.left; burst.style.top=burstY+'%';
+                    const count=20+Math.floor(Math.random()*16); const colors=['#ff6b9d','#ffd700','#ff8ab0','#c77dff','#fff','#ffb3d9'];
+                    for(let i=0;i<count;i++) {
+                        const p=document.createElement('div'); p.className='firework-particle';
+                        const angle=(i/count)*Math.PI*2, dist=80+Math.random()*70;
+                        p.style.setProperty('--tx',Math.cos(angle)*dist+'px'); p.style.setProperty('--ty',Math.sin(angle)*dist+'px');
+                        p.style.backgroundColor=colors[Math.floor(Math.random()*colors.length)];
+                        p.style.animationDuration=(0.8+Math.random()*0.6)+'s';
+                        burst.appendChild(p);
                     }
-                }
-                return points;
-            }
-
-            function renderMultilineText(lines, w, h, fontSize) {
-                offCanvas.width = w; offCanvas.height = h;
-                offCtx.clearRect(0, 0, w, h);
-                offCtx.fillStyle = '#ffffff';
-                offCtx.font = `bold ${fontSize}px "PingFang SC","Microsoft YaHei","SimHei","Sarabun","Noto Sans Thai",sans-serif`;
-                offCtx.textAlign = 'center';
-                offCtx.textBaseline = 'middle';
-                const lineHeight = fontSize * 1.4;
-                const totalHeight = lines.length * lineHeight;
-                let startY = (h - totalHeight)/2 + lineHeight/2;
-                lines.forEach((line, i) => offCtx.fillText(line, w/2, startY + i*lineHeight));
-            }
-
-            function getDroneColor() {
-                const colors = ['#ff99bb','#ffaacc','#ff88aa','#ffbbdd','#ff77aa','#ff99cc','#ffb3d9','#ffc0cb','#e8a0ff','#d0a0ff','#ffa0d0','#ffd0e0','#ffffff','#ffe0f0','#ffc0e0'];
-                return colors[Math.floor(Math.random()*colors.length)];
-            }
-
-            function initDrones(targetPoints) {
-                drones = targetPoints.map(p => ({
-                    x: Math.random()*canvasW, y: Math.random()*canvasH,
-                    tx: p.x, ty: p.y,
-                    color: getDroneColor(),
-                    size: 1.2 + Math.random()*1.5,
-                    glowSize: 5 + Math.random()*10,
-                    phase: Math.random()*Math.PI*2,
-                    flickerSpeed: 0.04 + Math.random()*0.06,
-                    arrived: false, arrivalProgress: 0,
-                    floatPhase: Math.random()*Math.PI*2,
-                }));
-            }
-
-            function updateDroneTargets(newPoints) {
-                if (newPoints.length !== drones.length) { initDrones(newPoints); return; }
-                drones.forEach((d,i) => {
-                    d.tx = newPoints[i].x; d.ty = newPoints[i].y;
-                    d.arrived = false; d.arrivalProgress = 0; d.color = getDroneColor();
+                    blessingPage.appendChild(burst); setTimeout(()=>burst.remove(),1500);
                 });
             }
-
-            function drawDroneGlow(d) {
-                const { x, y, color, glowSize, phase, size } = d;
-                const flicker = 0.7 + 0.3*Math.sin(phase), glow = glowSize * flicker;
-                let rgbColor = color.startsWith('#') ? hexToRgb(color) : (color.startsWith('rgb') ? color : 'rgb(255,150,180)');
-                const outerGrad = ctx.createRadialGradient(x, y, 0, x, y, glow);
-                outerGrad.addColorStop(0, rgbColor);
-                outerGrad.addColorStop(0.3, rgbColor.replace('rgb','rgba').replace(')',',0.5)'));
-                outerGrad.addColorStop(0.7, 'rgba(255,180,200,0.08)');
-                outerGrad.addColorStop(1, 'rgba(0,0,0,0)');
-                ctx.fillStyle = outerGrad;
-                ctx.beginPath(); ctx.arc(x, y, glow, 0, Math.PI*2); ctx.fill();
-                const innerGrad = ctx.createRadialGradient(x, y, 0, x, y, size*1.2);
-                innerGrad.addColorStop(0, 'rgba(255,255,255,0.95)');
-                innerGrad.addColorStop(0.4, rgbColor);
-                innerGrad.addColorStop(1, 'rgba(0,0,0,0)');
-                ctx.fillStyle = innerGrad;
-                ctx.beginPath(); ctx.arc(x, y, size*1.2, 0, Math.PI*2); ctx.fill();
+            let fireworkInterval=null;
+            function updateFireworkState() {
+                if(currentPage===4) { if(!fireworkInterval) { fireworkInterval=setInterval(launchFirework,700); for(let i=0;i<3;i++) setTimeout(launchFirework,i*250); } }
+                else { if(fireworkInterval) { clearInterval(fireworkInterval); fireworkInterval=null; } }
             }
+            function handleVisibility(index) { if(index===3) startDroneAnimation(); else stopDroneAnimation(); updateFireworkState(); }
 
-            function switchToNextMessage() {
-                const msg = blessingMessages[messageIndex % blessingMessages.length];
-                messageIndex++;
-                // 三行同时显示，大字号，采样 gap=5 让点稀疏清晰
-                const fontSize = Math.min(canvasW / 8, canvasH / 5, 80);
-                const lines = [msg.zh, msg.en, msg.th];
-                renderMultilineText(lines, canvasW, canvasH, fontSize);
-                let pts = sampleOffCanvas(canvasW, canvasH, 5);
-                if (pts.length === 0) {
-                    renderMultilineText([msg.zh], canvasW, canvasH, 60);
-                    pts = sampleOffCanvas(canvasW, canvasH, 4);
-                }
-                updateDroneTargets(pts);
-            }
+            // 惊喜按钮
+            document.getElementById('surpriseBtn').addEventListener('click',()=>{ document.getElementById('surpriseCardContainer').classList.toggle('flipped'); });
 
-            function animateDrones(timestamp) {
-                if (!isDroneAnimating) return;
-                animationId = requestAnimationFrame(animateDrones);
-                if (timestamp - lastSwitchTime > SWITCH_INTERVAL && drones.length > 0) {
-                    lastSwitchTime = timestamp;
-                    switchToNextMessage();
-                }
-                ctx.clearRect(0, 0, canvasW, canvasH);
-                const bgGrad = ctx.createRadialGradient(canvasW/2, canvasH*0.4, 0, canvasW/2, canvasH, canvasH);
-                bgGrad.addColorStop(0, '#1a0a1a'); bgGrad.addColorStop(0.6, '#0a040f'); bgGrad.addColorStop(1, '#020108');
-                ctx.fillStyle = bgGrad; ctx.fillRect(0, 0, canvasW, canvasH);
-                for (let i=0; i<70; i++) {
-                    const sx = ((i*173+42) % canvasW), sy = ((i*251+126) % (canvasH*0.8));
-                    const twinkle = 0.4 + 0.6*Math.abs(Math.sin(timestamp*0.0007 + i));
-                    ctx.fillStyle = `rgba(255,200,220,${twinkle*0.5})`;
-                    ctx.beginPath(); ctx.arc(sx, sy, 0.5, 0, Math.PI*2); ctx.fill();
-                }
-                for (let d of drones) {
-                    if (!d.arrived) {
-                        d.arrivalProgress += 0.014;
-                        if (d.arrivalProgress >= 1) { d.arrivalProgress = 1; d.arrived = true; }
-                        const t = d.arrivalProgress, eased = t<0.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2;
-                        d.x = d.tx + (d.x - d.tx)*(1-eased);
-                        d.y = d.ty + (d.y - d.ty)*(1-eased);
-                    } else {
-                        d.floatPhase += 0.02;
-                        d.x = d.tx + Math.sin(d.floatPhase*1.8)*1.2;
-                        d.y = d.ty + Math.cos(d.floatPhase*2.0)*1.2;
-                    }
-                    d.phase += d.flickerSpeed;
-                    drawDroneGlow(d);
-                }
-            }
+            document.getElementById('dronePage').addEventListener('click',()=>{ if(currentPage!==3||!isDroneAnimating||drones.length===0) return; lastSwitchTime=performance.now()-SWITCH_INTERVAL; });
 
-            function resizeCanvas() {
-                const rect = droneCanvas.parentElement.getBoundingClientRect();
-                const dpr = Math.min(window.devicePixelRatio || 1, 2);
-                canvasW = rect.width || window.innerWidth;
-                canvasH = rect.height || window.innerHeight;
-                droneCanvas.width = canvasW * dpr; droneCanvas.height = canvasH * dpr;
-                droneCanvas.style.width = canvasW + 'px'; droneCanvas.style.height = canvasH + 'px';
-                ctx.setTransform(1,0,0,1,0,0); ctx.scale(dpr, dpr);
-            }
-
-            function startDroneAnimation() {
-                if (isDroneAnimating) return;
-                isDroneAnimating = true;
-                messageIndex = 0; lastSwitchTime = performance.now();
-                resizeCanvas();
-                const firstMsg = blessingMessages[0];
-                const fontSize = Math.min(canvasW/8, canvasH/5, 80);
-                const lines = [firstMsg.zh, firstMsg.en, firstMsg.th];
-                renderMultilineText(lines, canvasW, canvasH, fontSize);
-                let pts = sampleOffCanvas(canvasW, canvasH, 5);
-                if (pts.length === 0) {
-                    renderMultilineText([firstMsg.zh], canvasW, canvasH, 60);
-                    pts = sampleOffCanvas(canvasW, canvasH, 4);
-                }
-                initDrones(pts);
-                messageIndex = 1;
-                if (animationId) cancelAnimationFrame(animationId);
-                animationId = requestAnimationFrame(animateDrones);
-            }
-
-            function stopDroneAnimation() {
-                isDroneAnimating = false;
-                if (animationId) { cancelAnimationFrame(animationId); animationId = null; }
-                drones = [];
-                if (ctx) ctx.clearRect(0,0,canvasW,canvasH);
-            }
-
-            function handleDronePageVisibility(index) {
-                const hint = document.getElementById('droneHint');
-                if (index === 3) { startDroneAnimation(); if (hint) hint.style.opacity = '1'; }
-                else { stopDroneAnimation(); if (hint) hint.style.opacity = '0'; }
-            }
-
-            document.getElementById('dronePage').addEventListener('click', () => {
-                if (currentPage !== 3 || !isDroneAnimating || drones.length === 0) return;
-                lastSwitchTime = performance.now() - SWITCH_INTERVAL;
-            });
-
-            window.addEventListener('resize', () => {
-                clearTimeout(window._resizeTimer);
-                window._resizeTimer = setTimeout(() => {
-                    if (currentPage === 3 && isDroneAnimating) {
-                        resizeCanvas();
-                        const msg = blessingMessages[(messageIndex-1+blessingMessages.length) % blessingMessages.length];
-                        const fontSize = Math.min(canvasW/8, canvasH/5, 80);
-                        renderMultilineText([msg.zh, msg.en, msg.th], canvasW, canvasH, fontSize);
-                        updateDroneTargets(sampleOffCanvas(canvasW, canvasH, 5));
-                        lastSwitchTime = performance.now();
-                    }
-                }, 400);
-            });
-
-            resizeCanvas();
-            updateIndicators(0);
-            updateLockUI();
+            resizeCanvas(); updateIndicators(0); updateLockUI();
         })();
     </script>
 </body>
